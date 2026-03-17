@@ -188,15 +188,15 @@ def _delta_info(cur: float, prev: float, is_currency: bool = True):
 
 def generate_pdf_report(
     latest_month, prior_month,
-    k_proj_cur,  k_val_cur,  k_urev_cur,  k_ucost_cur,
-    k_proj_prev, k_val_prev, k_urev_prev, k_ucost_prev,
+    k_proj_cur,  k_val_cur,  k_urev_cur,
+    k_proj_prev, k_val_prev, k_urev_prev,
     fig1, fig2, fig3,
-    df_table:               pd.DataFrame,
-    by_consultant:          pd.DataFrame,
-    total_uncl_active:      float,
-    count_active:           int,
-    total_uncl_cost_active: float,
-    df_active_full:         pd.DataFrame,
+    df_table:           pd.DataFrame,
+    by_consultant:      pd.DataFrame,
+    total_value_active: float,
+    total_uncl_active:  float,
+    count_active:       int,
+    df_active_full:     pd.DataFrame,
 ) -> bytes:
     from reportlab.lib.pagesizes import A4
     from reportlab.lib import colors as RC
@@ -400,26 +400,23 @@ def generate_pdf_report(
 
     # ── KPIs ───────────────────────────────────────────────────────────────
     story += sec("Key Performance Indicators")
-    cw = USABLE_W / 4
+    cw = USABLE_W / 3
     kpi_tbl = Table(
         [[
-            kpi_block("Projects Accepted",    f"{k_proj_cur:,}",
+            kpi_block("Projects Accepted",   f"{k_proj_cur:,}",
                       k_proj_cur, k_proj_prev, False),
-            kpi_block("Total Value Accepted",  fmt_dollar(k_val_cur),
+            kpi_block("Total Value Accepted", fmt_dollar(k_val_cur),
                       k_val_cur,  k_val_prev),
-            kpi_block("Unclaimed Revenue",     fmt_dollar(k_urev_cur),
+            kpi_block("Unclaimed Revenue",    fmt_dollar(k_urev_cur),
                       k_urev_cur, k_urev_prev),
-            kpi_block("Unclaimed Cost",        fmt_dollar(k_ucost_cur),
-                      k_ucost_cur,k_ucost_prev),
         ]],
-        colWidths=[cw] * 4,
+        colWidths=[cw] * 3,
     )
     kpi_tbl.setStyle(TableStyle([
         ("BOX",           (0,0),(0,-1), 0.75, C_ORANGE),
         ("BOX",           (1,0),(1,-1), 0.75, C_ORANGE),
         ("BOX",           (2,0),(2,-1), 0.75, C_ORANGE),
-        ("BOX",           (3,0),(3,-1), 0.75, C_ORANGE),
-        ("LINEAFTER",     (0,0),(2,-1), 0.5,  C_LIGHT_GRY),
+        ("LINEAFTER",     (0,0),(1,-1), 0.5,  C_LIGHT_GRY),
         ("BACKGROUND",    (0,0),(-1,-1), C_WHITE),
         ("LEFTPADDING",   (0,0),(-1,-1), 10),
         ("RIGHTPADDING",  (0,0),(-1,-1), 10),
@@ -455,12 +452,12 @@ def generate_pdf_report(
     pw = USABLE_W / 3
     pip_tbl = Table(
         [[
-            [Paragraph("UNCLAIMED (PRODUCT + INSTALL)", S_KLBL),
-             Paragraph(fmt_dollar(total_uncl_active), S_KVAL)],
+            [Paragraph("TOTAL VALUE (ACTIVE)", S_KLBL),
+             Paragraph(fmt_dollar(total_value_active), S_KVAL)],
             [Paragraph("ACTIVE PROJECTS", S_KLBL),
              Paragraph(f"{count_active:,}", S_KVAL)],
-            [Paragraph("UNCLAIMED (INSTALL ONLY)", S_KLBL),
-             Paragraph(fmt_dollar(total_uncl_cost_active), S_KVAL)],
+            [Paragraph("UNCLAIMED REVENUE", S_KLBL),
+             Paragraph(fmt_dollar(total_uncl_active), S_KVAL)],
         ]],
         colWidths=[pw] * 3,
     )
@@ -493,15 +490,15 @@ def generate_pdf_report(
         story.append(Paragraph("No active projects this period.", S_NOTE))
     else:
         cols = list(df_table.columns)
-        # Widths: Proj# | Description | Consultant | Date | Value | UnclRev | UnclCost
-        raw_ws = [2.0, 5.2, 2.8, 2.0, 2.0, 2.0, 2.0]
+        # Widths: Proj# | Description | Consultant | Date | Value | UnclRev
+        raw_ws = [2.0, 5.8, 2.8, 2.0, 2.2, 2.2]
         col_ws = [w * cm for w in raw_ws[:len(cols)]]
         # Stretch last col to fill
         diff = USABLE_W - sum(col_ws)
         if diff:
             col_ws[-1] += diff
 
-        money_cols = {"Value ($)", "Unclaimed Rev ($)", "Unclaimed Cost ($)"}
+        money_cols = {"Value ($)", "Unclaimed Rev ($)"}
         rows = [[Paragraph(c, S_TH) for c in cols]]
         for _, row in df_table.iterrows():
             rows.append([
@@ -530,20 +527,19 @@ def generate_pdf_report(
         by_consultant.sort_values("OutstandingPrice", ascending=False)["ConsultantName"].tolist()
     )
 
-    pipe_cols_pdf    = ["ProjectNumber", "ProjectDescription", "DateAccepted",
-                        "Price", "OutstandingPrice", "OutstandingCost"]
-    pipe_rename_pdf  = {
+    pipe_cols_pdf   = ["ProjectNumber", "ProjectDescription", "DateAccepted",
+                       "Price", "OutstandingPrice"]
+    pipe_rename_pdf = {
         "ProjectNumber":      "Project #",
         "ProjectDescription": "Description",
         "DateAccepted":       "Date Accepted",
         "Price":              "Value ($)",
         "OutstandingPrice":   "Unclaimed Rev ($)",
-        "OutstandingCost":    "Unclaimed Cost ($)",
     }
-    pipe_money = {"Value ($)", "Unclaimed Rev ($)", "Unclaimed Cost ($)"}
+    pipe_money = {"Value ($)", "Unclaimed Rev ($)"}
 
     # Column widths for the per-consultant table
-    pipe_col_ws = [w * cm for w in [2.0, 6.5, 2.2, 2.0, 2.2, 2.2]]
+    pipe_col_ws = [w * cm for w in [2.0, 7.5, 2.2, 2.2, 2.2]]
     diff_pipe = USABLE_W - sum(pipe_col_ws)
     if diff_pipe:
         pipe_col_ws[1] += diff_pipe  # absorb remainder into Description col
@@ -552,12 +548,12 @@ def generate_pdf_report(
         story.append(PageBreak())
 
         # Consultant header bar
-        uncl_total = by_consultant.loc[
+        uncl_total  = by_consultant.loc[
             by_consultant["ConsultantName"] == consultant, "OutstandingPrice"
         ].values[0]
-        uncl_cost_total = df_active_full[
+        value_total = df_active_full[
             df_active_full["ConsultantName"] == consultant
-        ]["OutstandingCost"].sum()
+        ]["Price"].sum()
 
         chdr = Table(
             [[
@@ -593,10 +589,10 @@ def generate_pdf_report(
             [[
                 [Paragraph("ACTIVE PROJECTS", S_KLBL),
                  Paragraph(f"{proj_count:,}", S_KVAL)],
-                [Paragraph("UNCLAIMED (PRODUCT + INSTALL)", S_KLBL),
+                [Paragraph("TOTAL VALUE", S_KLBL),
+                 Paragraph(fmt_dollar(value_total), S_KVAL)],
+                [Paragraph("UNCLAIMED REVENUE", S_KLBL),
                  Paragraph(fmt_dollar(uncl_total), S_KVAL)],
-                [Paragraph("UNCLAIMED (INSTALL ONLY)", S_KLBL),
-                 Paragraph(fmt_dollar(uncl_cost_total), S_KVAL)],
                 [Paragraph("NOT YET INVOICED", S_KLBL),
                  Paragraph(f"{fully_uncl:,}", S_KVAL)],
             ]],
@@ -813,14 +809,12 @@ with tab_insights:
     k_projects_cur   = len(df_cur)
     k_value_cur      = df_cur["Price"].sum()
     k_uncl_rev_cur   = df_cur["OutstandingPrice"].sum()
-    k_uncl_cost_cur  = df_cur["OutstandingCost"].sum()
 
     k_projects_prev  = len(df_prev)
-    k_value_prev     = df_prev["Price"].sum()   if not df_prev.empty else 0
-    k_uncl_rev_prev  = df_prev["OutstandingPrice"].sum()  if not df_prev.empty else 0
-    k_uncl_cost_prev = df_prev["OutstandingCost"].sum()   if not df_prev.empty else 0
+    k_value_prev     = df_prev["Price"].sum()          if not df_prev.empty else 0
+    k_uncl_rev_prev  = df_prev["OutstandingPrice"].sum() if not df_prev.empty else 0
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown(kpi_card(
             "Projects Accepted",
@@ -838,12 +832,6 @@ with tab_insights:
             "Unclaimed Revenue",
             fmt_dollar(k_uncl_rev_cur),
             delta_html(k_uncl_rev_cur, k_uncl_rev_prev) if prior_month else "",
-        ), unsafe_allow_html=True)
-    with c4:
-        st.markdown(kpi_card(
-            "Unclaimed Cost",
-            fmt_dollar(k_uncl_cost_cur),
-            delta_html(k_uncl_cost_cur, k_uncl_cost_prev) if prior_month else "",
         ), unsafe_allow_html=True)
 
     # ── Trend data — 6 months for grouped chart, 12 for stacked ───────────
@@ -945,12 +933,12 @@ with tab_insights:
 
     # Active pipeline snapshot KPIs
     with col_d:
-        total_uncl_active      = df_active["OutstandingPrice"].sum()
-        total_uncl_cost_active = df_active["OutstandingCost"].sum()
-        count_active           = df_active["ProjectNumber"].nunique()
+        total_value_active = df_active["Price"].sum()
+        total_uncl_active  = df_active["OutstandingPrice"].sum()
+        count_active       = df_active["ProjectNumber"].nunique()
 
         st.markdown(
-            kpi_card("Unclaimed (Product + Install)", fmt_dollar(total_uncl_active)),
+            kpi_card("Total Value (Active)", fmt_dollar(total_value_active)),
             unsafe_allow_html=True,
         )
         st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
@@ -960,7 +948,7 @@ with tab_insights:
         )
         st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
         st.markdown(
-            kpi_card("Unclaimed (Install Only)", fmt_dollar(total_uncl_cost_active)),
+            kpi_card("Unclaimed Revenue", fmt_dollar(total_uncl_active)),
             unsafe_allow_html=True,
         )
 
@@ -972,7 +960,7 @@ with tab_insights:
 
     table_cols = [
         "ProjectNumber", "ProjectDescription", "ConsultantName",
-        "DateAccepted", "Price", "OutstandingPrice", "OutstandingCost",
+        "DateAccepted", "Price", "OutstandingPrice",
     ]
     df_table = df_cur[df_cur["Status"].str.strip().str.lower() == "active"][table_cols].copy()
     df_table["DateAccepted"] = df_table["DateAccepted"].dt.strftime("%d %b %Y")
@@ -983,21 +971,19 @@ with tab_insights:
         "DateAccepted":       "Date Accepted",
         "Price":              "Value ($)",
         "OutstandingPrice":   "Unclaimed Rev ($)",
-        "OutstandingCost":    "Unclaimed Cost ($)",
     })
 
     st.dataframe(
         df_table.style
             .format({
-                "Value ($)":          "${:,.0f}",
-                "Unclaimed Rev ($)":  "${:,.0f}",
-                "Unclaimed Cost ($)": "${:,.0f}",
+                "Value ($)":         "${:,.0f}",
+                "Unclaimed Rev ($)": "${:,.0f}",
             })
             .set_properties(**{"color": "#1A1817", "background-color": "white"})
             .apply(
                 lambda col: [
                     f"background-color: {LIGHT_GREY}; color: #1A1817;"
-                    if col.name in ("Unclaimed Rev ($)", "Unclaimed Cost ($)") else ""
+                    if col.name == "Unclaimed Rev ($)" else ""
                     for _ in col
                 ],
                 axis=0,
@@ -1024,13 +1010,12 @@ with tab_insights:
             try:
                 pdf_bytes = generate_pdf_report(
                     latest_month, prior_month,
-                    k_projects_cur,  k_value_cur,  k_uncl_rev_cur,  k_uncl_cost_cur,
-                    k_projects_prev, k_value_prev, k_uncl_rev_prev, k_uncl_cost_prev,
+                    k_projects_cur,  k_value_cur,  k_uncl_rev_cur,
+                    k_projects_prev, k_value_prev, k_uncl_rev_prev,
                     fig1, fig2, fig3,
                     df_table,
                     by_consultant,
-                    total_uncl_active, count_active,
-                    total_uncl_cost_active,
+                    total_value_active, total_uncl_active, count_active,
                     df_active,
                 )
                 st.download_button(
@@ -1092,7 +1077,7 @@ with tab_pipeline:
 
     pipeline_cols = [
         "ProjectNumber", "ProjectDescription", "DateAccepted",
-        "Price", "OutstandingPrice", "OutstandingCost",
+        "Price", "OutstandingPrice",
     ]
     pipeline_rename = {
         "ProjectNumber":      "Project #",
@@ -1100,7 +1085,6 @@ with tab_pipeline:
         "DateAccepted":       "Date Accepted",
         "Price":              "Value ($)",
         "OutstandingPrice":   "Unclaimed Rev ($)",
-        "OutstandingCost":    "Unclaimed Cost ($)",
     }
 
     total_active   = df_p["ProjectNumber"].nunique()
@@ -1143,15 +1127,14 @@ with tab_pipeline:
         st.dataframe(
             df_c.style
                 .format({
-                    "Value ($)":          "${:,.0f}",
-                    "Unclaimed Rev ($)":  "${:,.0f}",
-                    "Unclaimed Cost ($)": "${:,.0f}",
+                    "Value ($)":         "${:,.0f}",
+                    "Unclaimed Rev ($)": "${:,.0f}",
                 })
                 .set_properties(**{"color": "#1A1817", "background-color": "white"})
                 .apply(
                     lambda col: [
                         f"background-color: {LIGHT_GREY}; color: #1A1817;"
-                        if col.name in ("Unclaimed Rev ($)", "Unclaimed Cost ($)") else ""
+                        if col.name == "Unclaimed Rev ($)" else ""
                         for _ in col
                     ],
                     axis=0,

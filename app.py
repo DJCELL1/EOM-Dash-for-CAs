@@ -191,11 +191,12 @@ def generate_pdf_report(
     k_proj_cur,  k_val_cur,  k_urev_cur,  k_ucost_cur,
     k_proj_prev, k_val_prev, k_urev_prev, k_ucost_prev,
     fig1, fig2, fig3,
-    df_table:           pd.DataFrame,
-    by_consultant:      pd.DataFrame,
-    total_uncl_active:  float,
-    count_active:       int,
-    avg_uncl:           float,
+    df_table:               pd.DataFrame,
+    by_consultant:          pd.DataFrame,
+    total_uncl_active:      float,
+    count_active:           int,
+    total_uncl_cost_active: float,
+    df_active_full:         pd.DataFrame,
 ) -> bytes:
     from reportlab.lib.pagesizes import A4
     from reportlab.lib import colors as RC
@@ -454,12 +455,12 @@ def generate_pdf_report(
     pw = USABLE_W / 3
     pip_tbl = Table(
         [[
-            [Paragraph("TOTAL UNCLAIMED (ACTIVE)", S_KLBL),
+            [Paragraph("UNCLAIMED (PRODUCT + INSTALL)", S_KLBL),
              Paragraph(fmt_dollar(total_uncl_active), S_KVAL)],
             [Paragraph("ACTIVE PROJECTS", S_KLBL),
              Paragraph(f"{count_active:,}", S_KVAL)],
-            [Paragraph("AVG UNCLAIMED / PROJECT", S_KLBL),
-             Paragraph(fmt_dollar(avg_uncl), S_KVAL)],
+            [Paragraph("UNCLAIMED (INSTALL ONLY)", S_KLBL),
+             Paragraph(fmt_dollar(total_uncl_cost_active), S_KVAL)],
         ]],
         colWidths=[pw] * 3,
     )
@@ -524,19 +525,137 @@ def generate_pdf_report(
 
     story.append(Spacer(1, 20))
 
-    # ── Pipeline by consultant (second page) ──────────────────────────────
-    story.append(PageBreak())
-    story += sec("Active Pipeline by Consultant")
+    # ── Pipeline by consultant — one page per consultant ───────────────────
+    consultant_order_pdf = (
+        by_consultant.sort_values("OutstandingPrice", ascending=False)["ConsultantName"].tolist()
+    )
 
-    for _, crow in by_consultant.sort_values("OutstandingPrice", ascending=False).iterrows():
-        cname  = crow["ConsultantName"]
-        uncl   = crow["OutstandingPrice"]
-        story.append(Paragraph(
-            f'<b>{cname}</b>  '
-            f'<font color="#6B6866" size="8">— {fmt_dollar(uncl)} unclaimed</font>',
-            ps("CH", fontSize=10, textColor=C_CHARCOAL, leading=14),
-        ))
-        story.append(Spacer(1, 4))
+    pipe_cols_pdf    = ["ProjectNumber", "ProjectDescription", "DateAccepted",
+                        "Price", "OutstandingPrice", "OutstandingCost"]
+    pipe_rename_pdf  = {
+        "ProjectNumber":      "Project #",
+        "ProjectDescription": "Description",
+        "DateAccepted":       "Date Accepted",
+        "Price":              "Value ($)",
+        "OutstandingPrice":   "Unclaimed Rev ($)",
+        "OutstandingCost":    "Unclaimed Cost ($)",
+    }
+    pipe_money = {"Value ($)", "Unclaimed Rev ($)", "Unclaimed Cost ($)"}
+
+    # Column widths for the per-consultant table
+    pipe_col_ws = [w * cm for w in [2.0, 6.5, 2.2, 2.0, 2.2, 2.2]]
+    diff_pipe = USABLE_W - sum(pipe_col_ws)
+    if diff_pipe:
+        pipe_col_ws[1] += diff_pipe  # absorb remainder into Description col
+
+    for consultant in consultant_order_pdf:
+        story.append(PageBreak())
+
+        # Consultant header bar
+        uncl_total = by_consultant.loc[
+            by_consultant["ConsultantName"] == consultant, "OutstandingPrice"
+        ].values[0]
+        uncl_cost_total = df_active_full[
+            df_active_full["ConsultantName"] == consultant
+        ]["OutstandingCost"].sum()
+
+        chdr = Table(
+            [[
+                Paragraph(f"<b>{consultant}</b>",
+                          ps("CN", fontName="Helvetica-Bold", fontSize=14,
+                             textColor=C_WHITE, leading=18)),
+                Paragraph(
+                    f"Active Pipeline<br/>"
+                    f"<font size='9'>{fmt_dollar(uncl_total)} unclaimed</font>",
+                    ps("CS", fontSize=10, textColor=C_WHITE,
+                       alignment=TA_RIGHT, leading=14)),
+            ]],
+            colWidths=[USABLE_W * 0.6, USABLE_W * 0.4],
+        )
+        chdr.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (-1, -1), C_CHARCOAL),
+            ("TOPPADDING",    (0, 0), (-1, -1), 10),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+            ("LEFTPADDING",   (0, 0), (0,  -1), 14),
+            ("RIGHTPADDING",  (-1,0), (-1, -1), 14),
+            ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
+        ]))
+        story.append(chdr)
+        story.append(HRFlowable(width="100%", thickness=3, color=C_ORANGE,
+                                 spaceBefore=0, spaceAfter=12))
+
+        # Mini KPI strip
+        df_c_all = df_active_full[df_active_full["ConsultantName"] == consultant]
+        proj_count = len(df_c_all)
+        fully_uncl = (df_c_all["OutstandingPrice"] >= df_c_all["Price"]).sum()
+
+        ckpi = Table(
+            [[
+                [Paragraph("ACTIVE PROJECTS", S_KLBL),
+                 Paragraph(f"{proj_count:,}", S_KVAL)],
+                [Paragraph("UNCLAIMED (PRODUCT + INSTALL)", S_KLBL),
+                 Paragraph(fmt_dollar(uncl_total), S_KVAL)],
+                [Paragraph("UNCLAIMED (INSTALL ONLY)", S_KLBL),
+                 Paragraph(fmt_dollar(uncl_cost_total), S_KVAL)],
+                [Paragraph("NOT YET INVOICED", S_KLBL),
+                 Paragraph(f"{fully_uncl:,}", S_KVAL)],
+            ]],
+            colWidths=[USABLE_W / 4] * 4,
+        )
+        ckpi.setStyle(TableStyle([
+            ("BOX",           (0,0),(0,-1), 0.75, C_ORANGE),
+            ("BOX",           (1,0),(1,-1), 0.75, C_ORANGE),
+            ("BOX",           (2,0),(2,-1), 0.75, C_ORANGE),
+            ("BOX",           (3,0),(3,-1), 0.75, C_ORANGE),
+            ("LINEAFTER",     (0,0),(2,-1), 0.5,  C_LIGHT_GRY),
+            ("BACKGROUND",    (0,0),(-1,-1), C_WHITE),
+            ("LEFTPADDING",   (0,0),(-1,-1), 10),
+            ("RIGHTPADDING",  (0,0),(-1,-1), 10),
+            ("TOPPADDING",    (0,0),(-1,-1), 8),
+            ("BOTTOMPADDING", (0,0),(-1,-1), 8),
+            ("VALIGN",        (0,0),(-1,-1), "MIDDLE"),
+        ]))
+        story.append(ckpi)
+        story.append(Spacer(1, 14))
+
+        # Projects table
+        story += sec("Active Jobs")
+        df_c = df_active_full[
+            df_active_full["ConsultantName"] == consultant
+        ][pipe_cols_pdf].copy()
+
+        # Sort: fully unclaimed first, then by OutstandingPrice desc
+        df_c["_fu"] = (df_c["OutstandingPrice"] >= df_c["Price"]).astype(int)
+        df_c = df_c.sort_values(["_fu", "OutstandingPrice"], ascending=[False, False])
+        df_c = df_c.drop(columns="_fu")
+        df_c["DateAccepted"] = pd.to_datetime(df_c["DateAccepted"], errors="coerce").dt.strftime("%d %b %Y")
+        df_c = df_c.rename(columns=pipe_rename_pdf)
+
+        if df_c.empty:
+            story.append(Paragraph("No active projects.", S_NOTE))
+        else:
+            rows_c = [[Paragraph(col, S_TH) for col in df_c.columns]]
+            for _, row in df_c.iterrows():
+                rows_c.append([
+                    Paragraph(
+                        f"${row[col]:,.0f}" if col in pipe_money else str(row[col]),
+                        S_TD_R if col in pipe_money else S_TD,
+                    )
+                    for col in df_c.columns
+                ])
+            tbl_c = Table(rows_c, colWidths=pipe_col_ws, repeatRows=1)
+            tbl_c.setStyle(TableStyle([
+                ("BACKGROUND",    (0, 0), (-1,  0), C_CHARCOAL),
+                ("LINEBELOW",     (0, 0), (-1,  0), 1.5, C_ORANGE),
+                ("ROWBACKGROUNDS",(0, 1), (-1, -1), [C_WHITE, C_OFF_WHITE]),
+                ("GRID",          (0, 0), (-1, -1), 0.25, C_LIGHT_GRY),
+                ("TOPPADDING",    (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LEFTPADDING",   (0, 0), (-1, -1), 4),
+                ("RIGHTPADDING",  (0, 0), (-1, -1), 4),
+                ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
+            ]))
+            story.append(tbl_c)
 
     story.append(Spacer(1, 16))
 
@@ -826,12 +945,12 @@ with tab_insights:
 
     # Active pipeline snapshot KPIs
     with col_d:
-        total_uncl_active = df_active["OutstandingPrice"].sum()
-        count_active      = df_active["ProjectNumber"].nunique()
-        avg_uncl          = total_uncl_active / count_active if count_active else 0
+        total_uncl_active      = df_active["OutstandingPrice"].sum()
+        total_uncl_cost_active = df_active["OutstandingCost"].sum()
+        count_active           = df_active["ProjectNumber"].nunique()
 
         st.markdown(
-            kpi_card("Total Unclaimed (Active)", fmt_dollar(total_uncl_active)),
+            kpi_card("Unclaimed (Product + Install)", fmt_dollar(total_uncl_active)),
             unsafe_allow_html=True,
         )
         st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
@@ -841,7 +960,7 @@ with tab_insights:
         )
         st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
         st.markdown(
-            kpi_card("Avg Unclaimed / Project", fmt_dollar(avg_uncl)),
+            kpi_card("Unclaimed (Install Only)", fmt_dollar(total_uncl_cost_active)),
             unsafe_allow_html=True,
         )
 
@@ -910,7 +1029,9 @@ with tab_insights:
                     fig1, fig2, fig3,
                     df_table,
                     by_consultant,
-                    total_uncl_active, count_active, avg_uncl,
+                    total_uncl_active, count_active,
+                    total_uncl_cost_active,
+                    df_active,
                 )
                 st.download_button(
                     "📄 Download Management Report (PDF)",

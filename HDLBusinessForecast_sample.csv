@@ -1,0 +1,109 @@
+ConsultantName,ProjectNumber,ProjectDescription,DateAccepted,Price,Cost,OutstandingPrice,OutstandingCost,Status
+James Whitfield,HDL-2025-001,Structural Assessment – Warehouse Expansion,01/02/2025,18500,12000,18500,12000,Active
+James Whitfield,HDL-2025-002,Hydraulic Design – Industrial Precinct,14/02/2025,32000,21000,16000,10500,Active
+Sarah Chen,HDL-2025-003,Civil Works Report – Subdivision Stage 2,20/02/2025,9800,6200,0,0,Complete
+Sarah Chen,HDL-2025-004,Drainage Review – Commercial Development,28/02/2025,14500,9400,14500,9400,Active
+Marcus Reid,HDL-2025-005,Environmental Impact Statement – Quarry,05/02/2025,55000,38000,27500,19000,Active
+Marcus Reid,HDL-2025-006,Site Investigation – Remediation Project,19/02/2025,22000,15000,22000,15000,Active
+James Whitfield,HDL-2025-007,Traffic Impact Assessment – Shopping Centre,10/03/2025,17000,11200,17000,11200,Active
+James Whitfield,HDL-2025-008,Stormwater Management Plan – Residential,18/03/2025,8400,5500,0,0,Complete
+Sarah Chen,HDL-2025-009,Geotechnical Investigation – Bridge Replacement,03/03/2025,41000,28000,41000,28000,Active
+Sarah Chen,HDL-2025-010,Flood Study – Rural Property Subdivision,21/03/2025,29500,19500,14750,9750,Active
+Marcus Reid,HDL-2025-011,Contamination Assessment – Former Service Station,12/03/2025,18900,13000,18900,13000,Active
+Marcus Reid,HDL-2025-012,Heritage Impact Statement – Town Hall Precinct,25/03/2025,12000,8000,6000,4000,Active
+James Whitfield,HDL-2025-013,Road Design – Rural Arterial Upgrade,07/04/2025,67000,45000,67000,45000,Active
+James Whitfield,HDL-2025-014,Subdivision Engineering – Stage 4,22/04/2025,38000,25000,19000,12500,Active
+Sarah Chen,HDL-2025-015,Water Supply Assessment – Remote Station,09/04/2025,15500,10200,15500,10200,Active
+Sarah Chen,HDL-2025-016,Earthworks Design – Industrial Lot,17/04/2025,23000,15500,0,0,Complete
+Marcus Reid,HDL-2025-017,Noise Impact Assessment – Manufacturing Facility,02/04/2025,16800,11500,16800,11500,Active
+Marcus Reid,HDL-2025-018,Coastal Erosion Study – Beachfront Development,28/04/2025,44000,30000,44000,30000,Active
+Priya Nair,HDL-2025-019,Retaining Wall Design – Residential Cut,11/04/2025,9200,6000,9200,6000,Active
+Priya Nair,HDL-2025-020,Slope Stability Analysis – Escarpment,24/04/2025,31000,21000,15500,10500,Active
+James Whitfield,HDL-2025-021,Sewer Pump Station Design – New Estate,06/05/2025,52000,36000,52000,36000,Active
+James Whitfield,HDL-2025-022,Pavement Design – Carpark Upgrade,15/05/2025,11000,7200,0,0,Complete
+Sarah Chen,HDL-2025-023,Vegetation Assessment – Conservation Zone,02/05/2025,8900,5800,8900,5800,Active
+Sarah Chen,HDL-2025-024,Civil Infrastructure Review – Airport Precinct,20/05/2025,73000,50000,36500,25000,Active
+Marcus Reid,HDL-2025-025,Groundwater Investigation – Agricultural Property,08/05/2025,27000,18500,27000,18500,Active
+Marcus Reid,HDL-2025-026,Land Capability Assessment – Vineyard,26/05/2025,13500,9000,6750,4500,Active
+Priya Nair,HDL-2025-027,Footing Design – Large Shed Structure,14/05/2025,7800,5100,0,0,Complete
+Priya Nair,HDL-2025-028,LVIA – Wind Farm Proposal,29/05/2025,48000,33000,48000,33000,Active
+James Whitfield,HDL-2025-029,Drainage Strategy – Mixed Use Development,04/06/2025,19500,13000,19500,13000,Active
+James Whitfield,HDL-2025-030,Road Safety Audit – School Zone,18/06/2025,6500,4200,6500,4200,Active
+Sarah Chen,HDL-2025-031,Geotechnical Report – Unit Development,10/06/2025,12000,8000,12000,8000,Active
+Sarah Chen,HDL-2025-032,Civil Design – Community Sports Facility,23/06/2025,58000,40000,29000,20000,Active
+Marcus Reid,HDL-2025-033,Acid Sulfate Soil Assessment – Wetlands,05/06/2025,21000,14500,21000,14500,Active
+Marcus Reid,HDL-2025-034,Flood Damage Assessment – Post-Event,16/06/2025,34000,23500,0,0,Complete
+Priya Nair,HDL-2025-035,Structural Peer Review – Apartment Complex,09/06/2025,15000,10000,15000,10000,Active
+Priya Nair,HDL-2025-036,Hydrological Analysis – Dam Safety Review,27/06/2025,62000,43000,62000,43000,Active
+James Whitfield,HDL-2025-037,Water Sensitive Urban Design – Precinct,03/07/2025,28500,19000,28500,19000,Active
+James Whitfield,HDL-2025-038,Development Application Support – Mixed Use,17/07/2025,16000,10500,8000,5250,Active
+Sarah Chen,HDL-2025-039,Geotechnical Investigation – Industrial Shed,08/07/2025,9500,6200,9500,6200,Active
+Sarah Chen,HDL-2025-040,Intersection Design – Traffic Signals,21/07/2025,43000,29500,43000,29500,Active
+Marcus Reid,HDL-2025-041,Ecological Assessment – Greenfield Site,07/07/2025,18000,12000,9000,6000,Active
+Marcus Reid,HDL-2025-042,Contamination Validation – Residential Lot,25/07/2025,11500,7800,11500,7800,Active
+Priya Nair,HDL-2025-043,Concrete Frame Design – Office Building,14/07/2025,37000,25500,37000,25500,Active
+Priya Nair,HDL-2025-044,Subsurface Drainage Design – Golf Course,30/07/2025,24000,16500,12000,8250,Active
+James Whitfield,HDL-2025-045,Transport Assessment – Medical Centre,05/08/2025,14000,9200,14000,9200,Active
+James Whitfield,HDL-2025-046,Sewer Reticulation Design – Subdivision,19/08/2025,47000,32000,47000,32000,Active
+Sarah Chen,HDL-2025-047,Civil Design – Aged Care Facility,11/08/2025,55000,38000,27500,19000,Active
+Sarah Chen,HDL-2025-048,Pavement Failure Investigation,26/08/2025,8200,5400,0,0,Complete
+Marcus Reid,HDL-2025-049,EIS Peer Review – Toll Road Upgrade,04/08/2025,39000,27000,39000,27000,Active
+Marcus Reid,HDL-2025-050,Site Audit – Petroleum Site,22/08/2025,17500,12000,17500,12000,Active
+Priya Nair,HDL-2025-051,Pile Foundation Design – High Rise,13/08/2025,68000,47000,68000,47000,Active
+Priya Nair,HDL-2025-052,Catchment Modelling – Council Stormwater,28/08/2025,33000,22500,16500,11250,Active
+James Whitfield,HDL-2025-053,Road Reserve Survey – Boundary Definition,02/09/2025,7500,4900,7500,4900,Active
+James Whitfield,HDL-2025-054,Stormwater Quality Assessment – Creek,16/09/2025,21000,14000,21000,14000,Active
+Sarah Chen,HDL-2025-055,Geotechnical Investigation – Bridge Pier,09/09/2025,36000,25000,36000,25000,Active
+Sarah Chen,HDL-2025-056,Urban Heat Island Study – City Block,24/09/2025,18500,12500,9250,6250,Active
+Marcus Reid,HDL-2025-057,Phase 1 Environmental Assessment – Factory,03/09/2025,12000,8200,12000,8200,Active
+Marcus Reid,HDL-2025-058,Groundwater Monitoring Program – Mine,18/09/2025,29000,20000,29000,20000,Active
+Priya Nair,HDL-2025-059,Roof Structure Assessment – Warehouse,08/09/2025,9800,6500,0,0,Complete
+Priya Nair,HDL-2025-060,River Bank Stabilisation Design,25/09/2025,44000,30500,44000,30500,Active
+James Whitfield,HDL-2025-061,Traffic Modelling – CBD Masterplan,07/10/2025,53000,36500,53000,36500,Active
+James Whitfield,HDL-2025-062,Subdivision Servicing Strategy – Stage 5,21/10/2025,31000,21000,15500,10500,Active
+Sarah Chen,HDL-2025-063,Site Earthworks Assessment – Quarry Extension,13/10/2025,27000,18500,27000,18500,Active
+Sarah Chen,HDL-2025-064,Civil Design Review – Childcare Centre,28/10/2025,11500,7500,11500,7500,Active
+Marcus Reid,HDL-2025-065,Environmental Monitoring – Landfill Closure,06/10/2025,38000,26000,19000,13000,Active
+Marcus Reid,HDL-2025-066,Dewatering Assessment – Basement Excavation,22/10/2025,16000,11000,16000,11000,Active
+Priya Nair,HDL-2025-067,Structural Assessment – Heritage Building,09/10/2025,23000,15500,23000,15500,Active
+Priya Nair,HDL-2025-068,WSUD Strategy – Greenfield Subdivision,27/10/2025,41000,28000,20500,14000,Active
+James Whitfield,HDL-2025-069,Road Design – Intersection Upgrade,03/11/2025,19000,12800,19000,12800,Active
+James Whitfield,HDL-2025-070,Hydraulic Modelling – Urban Flood Study,17/11/2025,46000,32000,46000,32000,Active
+Sarah Chen,HDL-2025-071,Geotechnical Assessment – Pipeline Corridor,10/11/2025,33000,22500,16500,11250,Active
+Sarah Chen,HDL-2025-072,Civil Engineering Report – Masterplan,25/11/2025,72000,50000,72000,50000,Active
+Marcus Reid,HDL-2025-073,Ecological Monitoring – Sensitive Habitat,04/11/2025,14500,9800,14500,9800,Active
+Marcus Reid,HDL-2025-074,Environmental Management Plan – Construction,19/11/2025,21000,14500,10500,7250,Active
+Priya Nair,HDL-2025-075,Wind Load Assessment – Canopy Structure,11/11/2025,8500,5600,0,0,Complete
+Priya Nair,HDL-2025-076,Levee Design – Rural Flood Mitigation,26/11/2025,57000,39500,57000,39500,Active
+James Whitfield,HDL-2026-001,Catchment Management Plan – Coastal Council,05/12/2025,48000,33000,48000,33000,Active
+James Whitfield,HDL-2026-002,Stormwater Infrastructure Upgrade – Town Centre,16/12/2025,29000,20000,14500,10000,Active
+Sarah Chen,HDL-2026-003,Geotechnical Report – Hospital Carpark,08/12/2025,17000,11500,17000,11500,Active
+Sarah Chen,HDL-2026-004,Civil Construction Supervision – Subdivision,22/12/2025,63000,44000,63000,44000,Active
+Marcus Reid,HDL-2026-005,Phase 2 Site Assessment – Former Foundry,09/12/2025,35000,24000,35000,24000,Active
+Marcus Reid,HDL-2026-006,Biodiversity Assessment – Regional Park Buffer,18/12/2025,22000,15000,11000,7500,Active
+Priya Nair,HDL-2026-007,Retaining Wall Certification – Residential,03/12/2025,6800,4400,0,0,Complete
+Priya Nair,HDL-2026-008,Coastal Hazard Assessment – Beachside Estate,20/12/2025,54000,37500,54000,37500,Active
+James Whitfield,HDL-2026-009,Transport Impact Assessment – Data Centre,06/01/2026,38000,26000,38000,26000,Active
+James Whitfield,HDL-2026-010,Drainage Design – Residential Estate Stage 6,20/01/2026,25000,17000,25000,17000,Active
+Sarah Chen,HDL-2026-011,Geotech Investigation – Overpass Widening,12/01/2026,44000,30500,44000,30500,Active
+Sarah Chen,HDL-2026-012,WSUD Compliance Review – Estate,27/01/2026,13000,8700,6500,4350,Active
+Marcus Reid,HDL-2026-013,Environmental Audit – Industrial Precinct,08/01/2026,31000,21500,31000,21500,Active
+Marcus Reid,HDL-2026-014,Riparian Vegetation Assessment – Creek Corridor,23/01/2026,16500,11000,16500,11000,Active
+Priya Nair,HDL-2026-015,Structural Design – Grandstand Upgrade,15/01/2026,71000,49000,71000,49000,Active
+Priya Nair,HDL-2026-016,Foundation Report – Sloping Site Residential,29/01/2026,9500,6200,9500,6200,Active
+James Whitfield,HDL-2026-017,Water Quality Study – Catchment Management,04/02/2026,22000,15000,22000,15000,Active
+James Whitfield,HDL-2026-018,Road Rehabilitation Design – Rural Network,18/02/2026,57000,39500,57000,39500,Active
+Sarah Chen,HDL-2026-019,Geotechnical Assessment – Solar Farm,10/02/2026,28000,19000,28000,19000,Active
+Sarah Chen,HDL-2026-020,Civil Design – Sporting Precinct Upgrade,24/02/2026,66000,46000,33000,23000,Active
+Marcus Reid,HDL-2026-021,Contamination Assessment – School Site,05/02/2026,19500,13500,19500,13500,Active
+Marcus Reid,HDL-2026-022,Water Balance Study – Irrigation Scheme,19/02/2026,37000,25500,37000,25500,Active
+Priya Nair,HDL-2026-023,Structural Review – Carpark Deck Expansion,11/02/2026,14000,9500,0,0,Complete
+Priya Nair,HDL-2026-024,Hydrological Assessment – Mine Closure Plan,26/02/2026,83000,58000,83000,58000,Active
+James Whitfield,HDL-2026-025,Traffic Engineering – Hospital Master Plan,03/03/2026,61000,42500,61000,42500,Active
+James Whitfield,HDL-2026-026,Stormwater Detention Basin Design,14/03/2026,34000,23500,34000,23500,Active
+Sarah Chen,HDL-2026-027,Geotechnical Investigation – Coastal Cliff,07/03/2026,26000,18000,26000,18000,Active
+Sarah Chen,HDL-2026-028,Civil Design – Waterfront Promenade,21/03/2026,79000,55000,79000,55000,Active
+Marcus Reid,HDL-2026-029,Ecological Impact Assessment – Port Expansion,10/03/2026,42000,29000,42000,29000,Active
+Marcus Reid,HDL-2026-030,Environmental Monitoring Report – Landfill,17/03/2026,18000,12500,18000,12500,Active
+Priya Nair,HDL-2026-031,Seismic Assessment – Unreinforced Masonry,06/03/2026,32000,22000,32000,22000,Active
+Priya Nair,HDL-2026-032,Flood Mitigation Study – Low-Lying Suburb,19/03/2026,55000,38000,27500,19000,Active

@@ -538,7 +538,10 @@ def generate_pdf_report(
         rows = [[Paragraph(c, S_TH) for c in cols]]
         for _, row in df_table.iterrows():
             rows.append([
-                Paragraph(str(row[c]), S_TD_R if c in money_cols else S_TD)
+                Paragraph(
+                    str(row[c]).upper() if c == "Description" else str(row[c]),
+                    S_TD_R if c in money_cols else S_TD,
+                )
                 for c in cols
             ])
 
@@ -678,7 +681,9 @@ def generate_pdf_report(
             for _, row in df_c.iterrows():
                 rows_c.append([
                     Paragraph(
-                        f"${row[col]:,.0f}" if col in pipe_money else str(row[col]),
+                        f"${row[col]:,.0f}" if col in pipe_money
+                        else str(row[col]).upper() if col == "Description"
+                        else str(row[col]),
                         S_TD_R if col in pipe_money else S_TD,
                     )
                     for col in df_c.columns
